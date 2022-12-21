@@ -1,0 +1,1 @@
+export const BASE_URL_API: string | undefined = process.env.REACT_APP_BASE_URL_API
