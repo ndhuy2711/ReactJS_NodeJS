@@ -40,11 +40,9 @@ const Register: React.FC = () => {
     const [alert, setAlert] = useState<React.SetStateAction<boolean>>(false)
     let navigate = useNavigate()
     const onFinish = async (values: any) => {
-        const phoneNumber: string = values.prefix + values.phone_number
-        const value = { ...values, phone_number: phoneNumber }
+        const value = { ...values }
         const result = await register(value)
         form.resetFields();
-        console.log({ result });
         if (result?.data?.user) {
             navigate('/login')
         }
@@ -53,14 +51,6 @@ const Register: React.FC = () => {
             navigate('/register')
         }
     };
-
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select style={{ width: 70 }}>
-                <Option value="86">+86</Option>
-            </Select>
-        </Form.Item>
-    );
 
     return (
         <div>
@@ -77,9 +67,6 @@ const Register: React.FC = () => {
                     form={form}
                     name="register"
                     onFinish={onFinish}
-                    initialValues={{
-                        prefix: '86',
-                    }}
                     scrollToFirstError
                 >
                     <Form.Item
@@ -110,7 +97,7 @@ const Register: React.FC = () => {
                         ]}
                         hasFeedback
                     >
-                        <Input.Password placeholder='Enter password'/>
+                        <Input.Password placeholder='Enter password' />
                     </Form.Item>
 
                     <Form.Item
@@ -133,7 +120,7 @@ const Register: React.FC = () => {
                             }),
                         ]}
                     >
-                        <Input.Password placeholder='Enter re-password'/>
+                        <Input.Password placeholder='Enter re-password' />
                     </Form.Item>
 
                     <Form.Item
@@ -150,7 +137,7 @@ const Register: React.FC = () => {
                         label="Phone Number"
                         rules={[{ required: true, message: 'Please input your phone number!' }]}
                     >
-                        <Input placeholder="Enter your phone number" addonBefore={prefixSelector} style={{ width: '100%' }} />
+                        <Input placeholder="Enter your phone number" />
                     </Form.Item>
 
                     <Form.Item

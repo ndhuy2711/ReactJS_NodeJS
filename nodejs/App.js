@@ -22,7 +22,7 @@ const port = process.env.PORT
 
 app.post('/register', register)
 app.post('/login', cookiesMiddle.createCookies, login)
-app.get('/user', cookiesMiddle.getCookies, Users.getUser)
+app.get('/token', cookiesMiddle.getCookies, Users.getUser) // Kiểm tra Token để get data gửi về browser
 app.listen(port, () => {
     console.log(`Server start at : ${domain}:${port}`);
 })

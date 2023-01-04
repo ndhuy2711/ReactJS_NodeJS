@@ -3,22 +3,48 @@ const { Token } = require("./token")
 
 const cookiesMiddle = {
 
-    getCookies: (req, res) => {
-        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-            const token = req.headers.authorization.split(' ')[1]
+    checkCookies: (request) => {
+        if (request.headers.authorization && request.headers.authorization.split(' ')[0] === 'Bearer') {
+            const token = request.headers.authorization.split(' ')[1]
             if (token !== "null") {
-                return { status: true, token: token }
+                return { token: token }
             }
-            return { status: false, token: null }
-        }
-        else {
-            return { status: false, token: null }
+            else {
+                return { token: null }
+            }
         }
     },
+
+    getCookies: (req, res, next) => {
+        const checkCookies = cookiesMiddle.checkCookies(req)
+        if (checkCookies.token !== "null") {
+            const verifyToken = async () => {
+                const checkToken = await JWT.checkToken(checkCookies.token)
+                if (checkToken !== "JsonWebTokenError") {
+                    if (checkToken !== "TokenExpiredError") {
+                        next()
+                    } else {
+                        const refeshToken = JWT.createRefeshToken(payload)
+                        await User.update({ refesh_token: refeshToken }, {
+                            where: { email: payload.email }
+                        })
+                        const token = JWT.signJWT(payload, keyToken, timeToken)
+                        return res.status(200).json({ msg: "Token expires !", token: token })
+                    }
+                } else {
+                    return res.status(401).json({ msg: "Token failed", token: null })
+                }
+            }
+            verifyToken()
+        } else {
+            return res.status(401).json({ msg: "Token null", token: null })
+        }
+    },
+
     createCookies: (req, res, next) => {
-        const checkCookies = cookiesMiddle.getCookies(req, res)
+        const checkCookies = cookiesMiddle.checkCookies(req)
         console.log("checkCookies :", checkCookies);
-        if (!checkCookies.status) {
+        if (checkCookies.token === null) {
             next()
         } else {
             const _token = checkCookies.token

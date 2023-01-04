@@ -13,7 +13,6 @@ export const register = async (values: any) => {
 export const login = async (values: any) => {
     const prefix: string = "/login"
     const token = getCookies() || null
-    
     return http.post(
         (`${prefix}`),
         values,

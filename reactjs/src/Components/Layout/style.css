@@ -1,4 +1,38 @@
 .layout_container {
-    margin-top: 10px;
     min-height: 100vh
+}
+
+.menu {
+    padding-top: 10px;
+}
+
+.content {
+    margin: 0 16px;
+}
+
+.breadcrumb {
+    margin: 16px 0;
+}
+
+.body {
+    padding: 24px;
+    min-height: 360px;
+    background: white;
+}
+
+.footer {
+    text-align: center;
+}
+
+.ant-menu-vertical {
+    border-inline-end: none !important;
+}
+
+.ant-layout-sider {
+    background: white !important;
+    border-inline-end: 1px solid rgba(5, 5, 5, 0.06) !important;
+}
+
+@media only screen and (max-width: 576px) and (min-width: 421px) {
+    
 }

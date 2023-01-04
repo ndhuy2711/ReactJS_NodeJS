@@ -5,18 +5,18 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { getCookies, removeCookies } from '../../Api/Cookies/handleCookies';
-import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../App/store';
 import { removeUser } from '../Form/userSlice';
+import { getActive } from './activeSlice';
 
 interface Active {
     active: string
 }
 const Header: React.FC<Active> = ({ active }) => {
-    let navigate = useNavigate()
     let getCookie = getCookies()
     const dispatch = useDispatch()
     const [cookie, setCookie] = useState<React.SetStateAction<string>>(getCookie || "")
+    const [activePage, setActivePage] = useState<React.SetStateAction<string>>(active)
     useEffect(() => {
         const cookies = cookie
         if (cookies !== "") {
@@ -25,6 +25,12 @@ const Header: React.FC<Active> = ({ active }) => {
             setCookie("")
         }
     }, [cookie])
+    useEffect(() => {
+        const _active = activePage
+        const _activePage = dispatch(getActive(_active))
+        setActivePage(_activePage.payload)
+    }, [activePage, dispatch])
+    
     const userInfo = useSelector((state: RootState) => state.user.user)
 
     const handleClickLogout = () => {
