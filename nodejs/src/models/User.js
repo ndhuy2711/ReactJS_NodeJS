@@ -30,6 +30,10 @@ const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     refesh_token: {
         type: DataTypes.STRING
     }

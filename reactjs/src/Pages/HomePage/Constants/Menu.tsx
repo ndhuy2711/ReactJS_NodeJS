@@ -8,7 +8,7 @@ import {
 
 export const MenuItems = {
     ITEM_1: "Dashboard",
-    ITEM_2: "Option 2",
+    ITEM_2: "Website",
     ITEM_3: "User",
     ITEM_3_1: "Admin",
     ITEM_3_2: "Customer",

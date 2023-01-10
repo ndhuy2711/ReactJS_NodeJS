@@ -41,6 +41,11 @@ const AccountInfomation: React.FC<IAccountInfomation> = (props) => {
                         >
                             <Input className='input' value={keyUCFirst(props?.email || "")} />
                         </Form.Item>
+                        <Form.Item
+                            label="Phone Number"
+                        >
+                            <Input className='input' value={keyUCFirst(props?.phone_number || "")} />
+                        </Form.Item>
                     </Form>
                 </Col>
                 <Col className='col' xs={24} sm={24} md={24} lg={9} xl={9}>
@@ -52,9 +57,9 @@ const AccountInfomation: React.FC<IAccountInfomation> = (props) => {
                         disabled={true}
                     >
                         <Form.Item
-                            label="Phone Number"
+                            label="Role"
                         >
-                            <Input className='input' value={keyUCFirst(props?.phone_number || "")} />
+                            <Input className='input' value={keyUCFirst(props?.role || "")} />
                         </Form.Item>
                         <Form.Item
                             label="Gender"

@@ -1,21 +1,48 @@
 
 import React, { useState } from 'react';
 import '../style.css'
-import { Form, Input, Checkbox, Button } from 'antd';
+import { Form, Input, Checkbox, Button, Alert, Space } from 'antd';
 import IAccountInfomation from "./IAccountInfomation"
-const ChangePassword: React.FC<IAccountInfomation> = (props) => {
+import { changePassword } from '../../../Api/Users';
+import { removeCookies, setCookies } from '../../../Api/Cookies/handleCookies';
+import { removeUser } from '../../../Components/Form/userSlice';
+import { useDispatch } from 'react-redux';
 
+const ChangePassword: React.FC<IAccountInfomation> = (props) => {
+    const dispatch = useDispatch()
+    const [form] = Form.useForm();
     const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
     const [itemDisabled, setItemDisabled] = useState<boolean>(false);
     const onFormLayoutChange = ({ disabled }: { disabled: boolean }) => {
         setComponentDisabled(disabled);
     }
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
+    const [alert, setAlert] = useState<React.SetStateAction<boolean>>(false)
+    const onFinish = async (value: any) => {
+        const values = { ...value, email: props.email }
+        const result = await changePassword(values)
+        const resultFalse = result?.response?.data?.status || false
+        const resultTrue = result?.data?.status || false
+        if (resultFalse || resultTrue) {
+            dispatch(removeUser())
+            removeCookies()
+            setCookies("")
+            window.location.href = '/'
+        }
+        else {
+            setAlert(true)
+            form.resetFields();
+        }
     };
 
     return (
         <>
+            {alert ?
+                <Space direction="vertical" className='alert_register'>
+                    <Alert message="Incorrect Password !" type="warning" showIcon closable />
+                </Space>
+                :
+                <></>
+            }
             <h1 className='title'>{props.getItemActive[0]}</h1>
             <hr />
             <Checkbox
@@ -62,7 +89,7 @@ const ChangePassword: React.FC<IAccountInfomation> = (props) => {
                 <Form.Item
                     name="confirm"
                     label="Confirm Password"
-                    dependencies={['password']}
+                    dependencies={['new_password']}
                     hasFeedback
                     rules={[
                         {
@@ -71,7 +98,7 @@ const ChangePassword: React.FC<IAccountInfomation> = (props) => {
                         },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
-                                if (!value || getFieldValue('password') === value) {
+                                if (!value || getFieldValue('new_password') === value) {
                                     return Promise.resolve();
                                 }
                                 return Promise.reject(new Error('The two passwords that you entered do not match!'));

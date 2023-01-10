@@ -3,6 +3,7 @@ interface IAccountInfomation {
     email: string,
     phone_number: string,
     gender: string,
+    role: string,
     getItemActive: string[]
 }
 

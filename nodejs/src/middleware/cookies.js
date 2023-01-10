@@ -17,6 +17,7 @@ const cookiesMiddle = {
 
     getCookies: (req, res, next) => {
         const checkCookies = cookiesMiddle.checkCookies(req)
+        console.log("checkCookies :", checkCookies);
         if (checkCookies.token !== "null") {
             const verifyToken = async () => {
                 const checkToken = await JWT.checkToken(checkCookies.token)
@@ -43,7 +44,6 @@ const cookiesMiddle = {
 
     createCookies: (req, res, next) => {
         const checkCookies = cookiesMiddle.checkCookies(req)
-        console.log("checkCookies :", checkCookies);
         if (checkCookies.token === null) {
             next()
         } else {

@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
 import '../style.css'
-import { Form, Input, Checkbox, Upload, Button, Select } from 'antd';
+import { Form, Input, Checkbox, Upload, Button, Select, Space, Alert } from 'antd';
 import { UploadOutlined } from '@ant-design/icons'
 import IAccountInfomation, { keyUCFirst } from "./IAccountInfomation"
+import { updateUser } from '../../../Api/Users';
 
 const { Option } = Select;
 const ChangeInfomation: React.FC<IAccountInfomation> = (props) => {
-
     const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
     const [itemDisabled, setItemDisabled] = useState<boolean>(false);
+    const [alert, setAlert] = useState<React.SetStateAction<boolean>>(false)
     const onFormLayoutChange = ({ disabled }: { disabled: boolean }) => {
         setComponentDisabled(disabled);
     }
@@ -20,15 +21,30 @@ const ChangeInfomation: React.FC<IAccountInfomation> = (props) => {
         }
         return e?.fileList;
     };
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
-    };
+    const onFinish = async (values: any) => {
+        const value = { ...values }
+        const result = await updateUser(value)
+        console.log("result abc :", result);
+        const resultFalse = result?.response?.data?.status || false
+        const resultTrue = result?.data?.status || false
+        if (resultFalse || resultTrue) {
+            console.log('Success:', result)
+            window.location.href = '/user'
+        }
+        else {
+            setAlert(true)
+        }
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
     };
     return (
         <>
+            {alert ?
+                <Space direction="vertical" className='alert_register'>
+                    <Alert message="User Infomation Cannot Be Changed !" type="warning" showIcon closable />
+                </Space>
+                :
+                <></>
+            }
             <h1 className='title'>{props.getItemActive[0]}</h1>
             <hr />
             <Checkbox
@@ -47,22 +63,22 @@ const ChangeInfomation: React.FC<IAccountInfomation> = (props) => {
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 16 }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 onValuesChange={onFormLayoutChange}
                 disabled={componentDisabled}
             >
                 <Form.Item
+                    label="Email"
+                    name="email"
+                    tooltip="Email don't change in here !"
+                    initialValue={keyUCFirst(props?.email || "")}
+                >
+                    <Input disabled={true} />
+                </Form.Item>
+                <Form.Item
                     label="Name"
                     name="name"
                     initialValue={keyUCFirst(props?.name || "")}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    initialValue={keyUCFirst(props?.email || "")}
                 >
                     <Input />
                 </Form.Item>

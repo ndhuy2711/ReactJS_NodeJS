@@ -10,6 +10,7 @@ import ChangeInfomation from "./Components/ChangeInfomation"
 import { useEffect, useState } from "react"
 import { getUser } from "./Service/User"
 import ChangePassword from "./Components/ChangePassword"
+import { getCookies } from "../../Api/Cookies/handleCookies"
 
 const User: React.FC<ActiveNav> = (active) => {
     const _items = HomePageLayout
@@ -19,10 +20,13 @@ const User: React.FC<ActiveNav> = (active) => {
     const [users, setUsers] = useState<React.SetStateAction<any>>(null)
     useEffect(() => {
         const values = async () => {
-            const _getUser = await getUser()
-            const result = _getUser?.data?.users || null
-            setUsers(result)
-            return result
+            const issetCookies = getCookies()
+            while (issetCookies !== null) {
+                const _getUser = await getUser()
+                const result = _getUser?.data?.users || null
+                setUsers(result)
+                return result
+            }
         }
         values()
     }, [])
@@ -31,7 +35,7 @@ const User: React.FC<ActiveNav> = (active) => {
             template = <AccountInfomation getItemActive={_getItemActive} {...users} />
             break
         case MenuItems.ITEM_2:
-            template = <ChangeInfomation getItemActive={_getItemActive} {...users}/>
+            template = <ChangeInfomation getItemActive={_getItemActive} {...users} />
             break
         case MenuItems.ITEM_3:
             template = <ChangePassword getItemActive={_getItemActive} {...users} />

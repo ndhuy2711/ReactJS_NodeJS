@@ -22,7 +22,7 @@ const registerAuth = {
             phone_number: user.phone_number
         }
         const refesh_token = JWT.createRefeshToken(payload)
-        const result = { ...user, password: passHash, refesh_token: refesh_token }
+        const result = { ...user, password: passHash, refesh_token: refesh_token, role: "customer" }
         const newUser = await User.create(result);
         const handleUser = newUser.dataValues
         return { ...handleUser, password: null, refesh_token: null }
